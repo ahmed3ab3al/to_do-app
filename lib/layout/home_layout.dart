@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../modules/archived_tasks/archived_task_screen.dart';
+import '../modules/done_tasks/done_task_screen.dart';
+import '../modules/new_tasks/new_task_screen.dart';
+
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
 
@@ -15,14 +19,25 @@ class _HomeLayoutState extends State<HomeLayout> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          'ToDo App',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,color: Colors.white),
+          currentIndex==0?
+          'New Task':
+          currentIndex==1?
+          'Done Task':
+          'Archived Task',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            color: Colors.white,
+          ),
         ),
       ),
+      body: currentIndex == 0 ? NewTaskScreen() :
+      currentIndex == 1 ? DoneTaskScreen() :
+      ArchivedTaskScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         selectedItemColor: Colors.blue,
-          type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
             currentIndex = index;
