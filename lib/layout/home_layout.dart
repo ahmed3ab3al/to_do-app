@@ -15,6 +15,11 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int currentIndex = 0;
   @override
+  void initState() {
+    createDatabase();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -63,8 +68,19 @@ class _HomeLayoutState extends State<HomeLayout> {
     var database = await openDatabase(
       'TODO.db',
       version:1,
-      onCreate: (database,version){},
-      onOpen: (database){}
+      onCreate: (database,version)
+      {
+         database.execute(
+          'CREATE TABLE tasks(id INTEGER PRIMARY KEY , title TEXT , data TEXT , tme TEXT ,status TEXT )'
+        ).then((value){
+          print('table created ');
+        }).catchError((error){
+          print('error  ${error.toString()}');
+        });
+      },
+      onOpen: (database){
+
+      }
     );
   }
 }
