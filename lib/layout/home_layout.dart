@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../modules/archived_tasks/archived_task_screen.dart';
 import '../modules/done_tasks/done_task_screen.dart';
@@ -57,4 +58,14 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
     );
   }
+
+  void createDatabase() async{
+    var database = await openDatabase(
+      'TODO.db',
+      version:1,
+      onCreate: (database,version){},
+      onOpen: (database){}
+    );
+  }
 }
+
