@@ -15,6 +15,7 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int currentIndex = 0;
   late Database database;
+  bool bottomSheetIsShown = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
@@ -29,13 +30,19 @@ class _HomeLayoutState extends State<HomeLayout> {
       key: scaffoldKey,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          scaffoldKey.currentState!.showBottomSheet(
-            (context) => Container(
-              width: double.infinity,
-              height: 50,
-              color: Colors.red,
-            ),
-          );
+          if (bottomSheetIsShown == true) {
+            Navigator.pop(context);
+            bottomSheetIsShown = false;
+          } else {
+            scaffoldKey.currentState!.showBottomSheet(
+              (context) => Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.red,
+              ),
+            );
+            bottomSheetIsShown = true;
+          }
         },
         child: Icon(Icons.add),
       ),
