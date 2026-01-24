@@ -15,6 +15,7 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   int currentIndex = 0;
   late Database database;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -25,9 +26,16 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          insertToDatabase();
+          scaffoldKey.currentState!.showBottomSheet(
+            (context) => Container(
+              width: double.infinity,
+              height: 50,
+              color: Colors.red,
+            ),
+          );
         },
         child: Icon(Icons.add),
       ),
