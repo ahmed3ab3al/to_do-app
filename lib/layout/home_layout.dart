@@ -17,6 +17,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   late Database database;
   bool bottomSheetIsShown = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  IconData fabIcon = Icons.edit;
 
   @override
   void initState() {
@@ -33,6 +34,9 @@ class _HomeLayoutState extends State<HomeLayout> {
           if (bottomSheetIsShown == true) {
             Navigator.pop(context);
             bottomSheetIsShown = false;
+            setState(() {
+              fabIcon = Icons.edit;
+            });
           } else {
             scaffoldKey.currentState!.showBottomSheet(
               (context) => Container(
@@ -42,9 +46,12 @@ class _HomeLayoutState extends State<HomeLayout> {
               ),
             );
             bottomSheetIsShown = true;
+            setState(() {
+              fabIcon = Icons.add;
+            });
           }
         },
-        child: Icon(Icons.add),
+        child: Icon(fabIcon),
       ),
       appBar: AppBar(
         backgroundColor: Colors.blue,
