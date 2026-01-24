@@ -14,22 +14,31 @@ class HomeLayout extends StatefulWidget {
 
 class _HomeLayoutState extends State<HomeLayout> {
   int currentIndex = 0;
+  late Database database;
+
   @override
   void initState() {
     createDatabase();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          insertToDatabase();
+        },
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          currentIndex==0?
-          'New Task':
-          currentIndex==1?
-          'Done Task':
-          'Archived Task',
+          currentIndex == 0
+              ? 'New Task'
+              : currentIndex == 1
+              ? 'Done Task'
+              : 'Archived Task',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
@@ -37,9 +46,11 @@ class _HomeLayoutState extends State<HomeLayout> {
           ),
         ),
       ),
-      body: currentIndex == 0 ? NewTaskScreen() :
-      currentIndex == 1 ? DoneTaskScreen() :
-      ArchivedTaskScreen(),
+      body: currentIndex == 0
+          ? NewTaskScreen()
+          : currentIndex == 1
+          ? DoneTaskScreen()
+          : ArchivedTaskScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         selectedItemColor: Colors.blue,
@@ -64,24 +75,40 @@ class _HomeLayoutState extends State<HomeLayout> {
     );
   }
 
-  void createDatabase() async{
-    var database = await openDatabase(
+  void createDatabase() async {
+    database = await openDatabase(
       'TODO.db',
-      version:1,
-      onCreate: (database,version)
-      {
-         database.execute(
-          'CREATE TABLE tasks(id INTEGER PRIMARY KEY , title TEXT , data TEXT , tme TEXT ,status TEXT )'
-        ).then((value){
-          print('table created ');
-        }).catchError((error){
-          print('error  ${error.toString()}');
-        });
+      version: 1,
+      onCreate: (database, version) {
+        database
+            .execute(
+              'CREATE TABLE tasks(id INTEGER PRIMARY KEY , title TEXT , data TEXT , time TEXT ,status TEXT )',
+            )
+            .then((value) {
+              print('table created ');
+            })
+            .catchError((error) {
+              print('error  ${error.toString()}');
+            });
       },
-      onOpen: (database){
-
-      }
+      onOpen: (database) {
+        print('database opened0');
+      },
     );
   }
-}
 
+  void insertToDatabase() async {
+    await database.transaction((txn) async {
+      await txn
+          .rawInsert(
+            'INSERT INTO tasks(title,data,time,status) VALUES ("new Task","24-1","21-16","new")',
+          )
+          .then((value) {
+            print("$value inserted successfully");
+          })
+          .catchError((error) {
+            print('error ${error.toString()}');
+          });
+    });
+  }
+}
